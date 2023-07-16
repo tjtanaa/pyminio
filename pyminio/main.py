@@ -120,25 +120,20 @@ class Pyminio:
     @_validate_directory
     def walk(self, top, topdown=True, onerror=None, followlinks=False):
         match = Match(top)
+        if not match:
+            raise NotImplementedError("Does not Match.")
         if not topdown:
             raise NotImplementedError("Does not support `bottom-up` implementation yet")
         pass
 
-        dirpath = []
-        dirnames = []
-        filenames = []
-        # top_path_obj = PurePath(top)
-        # dirpath.append(top_path_obj.parent)
-        # dirnames.append(self.listdir(top, dirs_only=True))
-        # filenames.append(self.listdir(top, files_only=True))
 
-        return_tuple_list = [
-            (
-                top,
-                self.listdir(top, dirs_only=True),
-                self.listdir(top, files_only=True)
-            )
-        ]
+        # return_tuple_list = [
+        #     (
+        #         top,
+        #         self.listdir(top, dirs_only=True),
+        #         self.listdir(top, files_only=True)
+        #     )
+        # ]
 
         queue = [top]
         while len(queue) > 0:
@@ -146,19 +141,24 @@ class Pyminio:
             root_dir = queue.pop(0)
             dirnames = self.listdir(root_dir, dirs_only=True)
             filenames = self.listdir(root_dir, files_only=True)
-            return_tuple_list.append(
-                (
+            yield (
                     root_dir,
                     dirnames,
                     filenames
                 )
-            )
+            # return_tuple_list.append(
+            #     (
+            #         root_dir,
+            #         dirnames,
+            #         filenames
+            #     )
+            # )
             for dirname in dirnames:
                 queue.append(
                     os.path.join(root_dir, dirname, "")
                 )
                 
-        return return_tuple_list
+        # return return_tuple_list
 
     @_validate_directory
     def listdir(self, path: str, files_only: bool = False,
