@@ -3,7 +3,7 @@ from os.path import join
 from typing import Dict, Any
 from dataclasses import dataclass
 
-from attrdict import AttrDict
+from pyminio.attrdict import AttrDict
 from cached_property import cached_property
 
 ROOT = "/"
@@ -54,12 +54,17 @@ class Match:
         """Get the bucket name, path prefix and file's name from path."""
         if self.is_root():
             return AttrDict(bucket='', prefix='', filename='')
-
+        # print(self.path)
         match = self.PATH_STRUCTURE.match(self.path)
-
+        # print(match)
         if match is None:
             raise ValueError(f'{self.path} is not a valid path')
 
+        # return AttrDict(
+        #     bucket=match.group("bucket"),
+        #     prefix=match.group("prefix") or '',
+        #     filename=match.group("filename") or ''
+        # )
         return AttrDict(
             bucket=match.group("bucket"),
             prefix=match.group("prefix") or '',

@@ -5,9 +5,11 @@ from collections import deque
 from datetime import datetime
 from typing import List, Dict, Tuple
 from os.path import join, basename, dirname, normpath
+from pathlib import PurePath
+import os
 
 import pytz
-from attrdict import AttrDict
+from pyminio.attrdict import AttrDict
 from minio import Minio, definitions
 from minio.error import NoSuchKey, BucketNotEmpty
 
@@ -116,6 +118,49 @@ class Pyminio:
                 for key, value in detailed_metadata.items()}
 
     @_validate_directory
+    def walk(self, top, topdown=True, onerror=None, followlinks=False):
+        match = Match(top)
+        if not topdown:
+            raise NotImplementedError("Does not support `bottom-up` implementation yet")
+        pass
+
+        dirpath = []
+        dirnames = []
+        filenames = []
+        # top_path_obj = PurePath(top)
+        # dirpath.append(top_path_obj.parent)
+        # dirnames.append(self.listdir(top, dirs_only=True))
+        # filenames.append(self.listdir(top, files_only=True))
+
+        return_tuple_list = [
+            (
+                top,
+                self.listdir(top, dirs_only=True),
+                self.listdir(top, files_only=True)
+            )
+        ]
+
+        queue = [top]
+        while len(queue) > 0:
+            # print(queue)
+            root_dir = queue.pop(0)
+            dirnames = self.listdir(root_dir, dirs_only=True)
+            filenames = self.listdir(root_dir, files_only=True)
+            return_tuple_list.append(
+                (
+                    root_dir,
+                    dirnames,
+                    filenames
+                )
+            )
+            for dirname in dirnames:
+                queue.append(
+                    os.path.join(root_dir, dirname, "")
+                )
+                
+        return return_tuple_list
+
+    @_validate_directory
     def listdir(self, path: str, files_only: bool = False,
                 dirs_only: bool = False) -> Tuple[str]:
         """Return all files and directories within the directory path.
@@ -135,7 +180,7 @@ class Pyminio:
         if match.is_root():
             if files_only:
                 return tuple()
-
+            print(self._get_buckets())
             return tuple(f"{b.name}/" for b in self._get_buckets())
 
         return tuple(obj.object_name.replace(match.prefix, '')

@@ -17,7 +17,6 @@ setuptools.setup(
         'minio <7.0.0, >=6.0.0',
         'pytz',
         'cached-property',
-        'attrdict',
         'dataclasses'
     ],
     extras_require={
@@ -32,7 +31,8 @@ setuptools.setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8'
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.10'
     ],
     python_requires='>=3.6',
 )
