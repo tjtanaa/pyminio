@@ -118,7 +118,7 @@ This method must get a directory path or it will raise a ValueError.
 
 ```python
 >>> pyminio_client.walk('/foo/bar/baz/')
-(/landsduat-storage/ , ('folder1', 'folder2'), ('file1', 'file2'))
+('/foo/bar/baz/' , ('folder1', 'folder2'), ('file1', 'file2'))
 ```
 
 
