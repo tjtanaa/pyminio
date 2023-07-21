@@ -64,6 +64,7 @@ Firstly you need to set up your  [Minio Docker](https://hub.docker.com/r/minio/m
 ## Usage
 - [mkdirs](#mkdirs)
 - [listdir](#listdir)
+- [walk](#walk)
 - [exists](#exists)
 - [isdir](#isdir)
 - [truncate](#truncate)
@@ -105,6 +106,21 @@ There is an option to use the files_only flag to get only files and dirs_only to
 >>> pyminio_client.listdir('/foo/bar/baz/', dirs_only=True)
 ('directory_name/', )
 ```
+
+
+
+### <a name="walk"></a>walk(self, top, topdown=True, onerror=None, followlinks=False) -> Tuple[str]
+`Pyminio.walk` will generate the file names in a directory tree by walking the tree top-down ( bottom-up, is not supported yet). For each directory in the tree rooted at directory top (including top itself), it yields a 3-tuple (dirpath, dirnames, filenames).. Works like os's `walk`.
+
+The function arguments are copied from os's `walk`. But the only argument used is `top`.
+
+This method must get a directory path or it will raise a ValueError.
+
+```python
+>>> pyminio_client.walk('/foo/bar/baz/')
+(/landsduat-storage/ , ('folder1', 'folder2'), ('file1', 'file2'))
+```
+
 
 ### <a name="exists"></a>exists(self, path: str) -> bool
 `Pyminio.exists` will return a boolean that confirm rather this path exists or not in the server. Works like os's `path.exists`.
